@@ -26,9 +26,12 @@ ViewModel injection, SavedStateHandle which took me a lot of time with Dagger
 which are much cleaner.
 
 
+
+
 If I had to write the application again I would turn off Firestore persistence and create Room database for caching.
 Then i would build RemoteMediator in which Room would be the source of truth and Firestore would be threated as a Backend Service.
 What would be the resault of this?
+
 ## PROS
 - Lower costs because users can edit single item multiple times (I would send to firebase only latest changes)
 - Better offline support
