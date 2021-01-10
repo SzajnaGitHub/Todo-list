@@ -15,10 +15,14 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="Theme.TodoList.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="splashScreenTheme" parent="Theme.MaterialComponents.Light">
+        <item name="android:windowBackground">@drawable/splash_view</item>
+        <item name="android:statusBarColor">@android:color/holo_blue_light</item>
     </style>
 
+    <style name="FabStyle" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="backgroundTint">@android:color/holo_blue_light</item>
+        <item name="tint">@color/white</item>
+    </style>
 
 </resources>

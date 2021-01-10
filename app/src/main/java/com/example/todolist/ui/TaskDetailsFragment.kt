@@ -3,20 +3,22 @@ package com.example.todolist.ui
 import android.os.Bundle
 import android.view.View
 import androidx.core.os.bundleOf
-import androidx.lifecycle.ViewModelProvider
 import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.todolist.R
 import com.example.todolist.databinding.FragmentTaskDetailsBinding
 import com.example.todolist.model.TaskModel
+import com.example.todolist.ui.viewmodel.TaskDetailsViewModel
 import com.example.todolist.utils.Resource
+import com.example.todolist.utils.bounce
 import com.example.todolist.utils.hideKeyboard
+import com.example.todolist.utils.input.InputType
 import com.example.todolist.utils.input.InputTypeResolver
 import com.example.todolist.utils.loadImage
-import com.example.todolist.ui.viewmodel.TaskDetailsViewModel
 import com.example.todolist.utils.result.MessageResolver
-import com.google.android.material.snackbar.Snackbar
+import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.RxTextView
 import dagger.android.support.DaggerFragment
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -55,6 +57,7 @@ class TaskDetailsFragment : DaggerFragment(R.layout.fragment_task_details) {
     }
 
     override fun onDestroyView() {
+        disposables.clear()
         _binding = null
         super.onDestroyView()
     }
@@ -84,9 +87,10 @@ class TaskDetailsFragment : DaggerFragment(R.layout.fragment_task_details) {
             hideKeyboard()
         }
 
-        binding.submitButton.setOnClickListener {
-            viewModel.validateInput()
-        }
+        binding.submitButton.clicks()
+            .throttleFirst(INPUT_DEBOUNCE, TimeUnit.MILLISECONDS)
+            .subscribe { viewModel.validateInput() }
+            .let(disposables::add)
     }
 
     private fun setupInputChanges() {
@@ -95,6 +99,7 @@ class TaskDetailsFragment : DaggerFragment(R.layout.fragment_task_details) {
             .debounce(INPUT_DEBOUNCE, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .map { it.toString().trim() }
+            .distinctUntilChanged()
             .subscribe {
                 viewModel.title = it
                 viewModel.isTitleValid(it)
@@ -106,26 +111,34 @@ class TaskDetailsFragment : DaggerFragment(R.layout.fragment_task_details) {
             .debounce(INPUT_DEBOUNCE, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .map { it.toString().trim() }
+            .distinctUntilChanged()
             .subscribe {
                 viewModel.description = it
             }
             .let(disposables::add)
 
         RxTextView.textChanges(binding.urlInputEditText)
-            .skipInitialValue()
             .debounce(INPUT_DEBOUNCE, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
             .map { it.toString().trim() }
+            .distinctUntilChanged()
             .subscribe {
                 viewModel.url = it
-                binding.imageView.loadImage(it)
+                if (it.isNotBlank()) {
+                    binding.imageView.loadImage(it)
+                }
             }
             .let(disposables::add)
     }
 
     private fun observeInputValidChanges() {
-        viewModel.titleInputValid.observe(viewLifecycleOwner) {
-            binding.textInputTitle.error = InputTypeResolver.resolve(requireContext(), it)
+        viewModel.titleInputValid.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { inputType ->
+                binding.textInputTitle.error = InputTypeResolver.resolve(requireContext(), inputType)
+                if (inputType != InputType.VALID) {
+                    binding.textInputTitle.bounce(1.05f)
+                }
+            }
         }
     }
 

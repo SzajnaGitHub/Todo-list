@@ -11,4 +11,6 @@ class Event<out T>(private val data: T) {
         hasBeenHandled = true
         data
     }
+
+    fun peekContent() = data
 }

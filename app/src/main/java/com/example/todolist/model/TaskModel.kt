@@ -2,15 +2,13 @@ package com.example.todolist.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import java.text.DateFormat
+import java.util.*
 
 @Parcelize
 data class TaskModel(
-    val id: Int = 0,
+    val id: String = UUID.randomUUID().toString(),
     val title: String = "",
     val description: String = "",
     val dateInMillis: Long = System.currentTimeMillis(),
-    val iconUrl: String? = ""
-) : Parcelable {
-    val date: String get() = DateFormat.getDateTimeInstance().format(dateInMillis)
-}
+    val iconUrl: String? = null
+) : Parcelable

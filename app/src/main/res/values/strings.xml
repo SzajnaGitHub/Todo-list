@@ -5,15 +5,26 @@
     <string name="edit_item_title">Edit Item</string>
     <string name="add_item_title">Add Item</string>
 
+    <string name="status_connected">Connected</string>
+    <string name="status_disconnected">Your App is running in offline mode</string>
+    <string name="status_list_empty">Your TODO list is empty.</string>
+
+
     <string name="title_remove">Removal</string>
     <string name="remove_confirmation_text">Are you sure you want to delete this item?</string>
-    <string name="action_delete">Delete</string>
-    <string name="action_cancel">Cancel</string>
     <string name="title_hint">Title</string>
     <string name="description_hint">Description</string>
     <string name="url_hint">Icon URL</string>
 
+    <!-- ACTION -->
+    <string name="action_retry">Retry</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_add_item">Add item</string>
+
+
     <!-- ERROR MESSAGES -->
+    <string name="message_error_items_could_not_be_loaded">Items could not be loaded</string>
     <string name="message_error_empty_input">Input is empty</string>
     <string name="task_delete_fail_text">Item deletion failed</string>
     <string name="task_update_fail_text">Item update failed</string>

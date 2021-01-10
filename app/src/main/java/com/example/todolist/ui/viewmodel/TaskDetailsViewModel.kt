@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.todolist.model.TaskModel
-import com.example.todolist.repository.TasksRepository
+import com.example.todolist.data.repository.TasksRepository
 import com.example.todolist.utils.Event
 import com.example.todolist.utils.Resource
 import com.example.todolist.utils.asLiveData
@@ -13,6 +13,7 @@ import com.example.todolist.utils.ioCall
 import com.example.todolist.utils.result.ErrorMessageId
 import com.example.todolist.utils.result.Result
 import com.example.todolist.utils.result.SuccessMessageId
+import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,8 +25,8 @@ class TaskDetailsViewModel @Inject constructor(
 
     private val disposables = CompositeDisposable()
 
-    private val _titleInputValid = MutableLiveData<InputType>()
-    val titleInputValid: LiveData<InputType> get() = _titleInputValid
+    private val _titleInputValid = MutableLiveData<Event<InputType>>()
+    val titleInputValid: LiveData<Event<InputType>> get() = _titleInputValid
 
     private val _taskAddedOrUpdated = MutableLiveData<Event<Resource<Unit>>>()
     val taskAddedOrUpdate: LiveData<Event<Resource<Unit>>> get() = _taskAddedOrUpdated
@@ -57,13 +58,13 @@ class TaskDetailsViewModel @Inject constructor(
     }
 
     private fun isInputValid(input: String) = when {
-        input.isBlank() || input.isEmpty() -> InputType.BLANK_OR_EMPTY
+        input.isBlank() -> InputType.BLANK_OR_EMPTY
         else -> InputType.VALID
     }
 
     fun isTitleValid(title: String): Boolean {
         val inputType = isInputValid(title)
-        _titleInputValid.postValue(inputType)
+        _titleInputValid.postValue(Event(inputType))
         return inputType == InputType.VALID
     }
 

@@ -16,11 +16,14 @@ interface TaskDao {
     fun delete(entity: TaskEntity): Completable
 
     @Update
-    fun updateTask(entity: TaskEntity): Completable
+    fun update(entity: TaskEntity): Completable
 
     @Query("SELECT * FROM task_table ORDER BY dateInMillis DESC")
     fun getAllTasks(): Observable<List<TaskEntity>>
 
     @Query("SELECT * FROM task_table ORDER BY dateInMillis DESC")
-    fun getTasks(): PagingSource<Int, List<TaskEntity>>
+    fun getTasks(): PagingSource<Int, TaskEntity>
+
+    @Query("DELETE FROM task_table")
+    fun clearTasks(): Completable
 }
