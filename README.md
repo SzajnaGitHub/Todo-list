@@ -14,7 +14,7 @@ Tech stack:
 - Leak Canary
 - MVVM
 
-My thoughts:
+## My thoughts:
 - Firestore offline support does not work very well in my opinion.
 Adding or editing items when there is no internet connection does not emit any values (success or error).
 According to the Firebase documentation we should skip callback and proceed with flow which is not the best practise in my opinion.
@@ -25,13 +25,16 @@ ViewModel injection, SavedStateHandle which took me a lot of time with Dagger
 - RxJava is very powerfull tool when data needs to be transformed or filtered, which was not needed in this example so I should use Coroutines
 which are much cleaner.
 
+## PROS
 - If I had to write the application again I would turn off Firestore persistence and create Room database for caching.
 Then i would build RemoteMediator in which Room would be the source of truth and Firestore would be threated as a Backend Service.
 What would be the resault of this?
-+ Lower costs because users can edit single item multiple times (I would send to firebase only latest changes)
-+ Better offline support
+- Lower costs because users can edit single item multiple times (I would send to firebase only latest changes)
+- Better offline support
 + Better refresh system
 + Better migration in case of changing Firestore to for example Backend Service. 
+
+## CONS
 - Writing second cache system when Firebase already created one.
 
 Tests:
