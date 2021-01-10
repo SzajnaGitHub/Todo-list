@@ -25,7 +25,8 @@ ViewModel injection, SavedStateHandle which took me a lot of time with Dagger
 - RxJava is very powerfull tool when data needs to be transformed or filtered, which was not needed in this example so I should use Coroutines
 which are much cleaner.
 
-
+- I have implemented swipe to delete functionality but removing items from firestore takes a lot of time which casuses this functionality to looks
+buggy which wasn't be the case for ROOM. So I would remove this functionality in production. 
 
 
 If I had to write the application again I would turn off Firestore persistence and create Room database for caching.
